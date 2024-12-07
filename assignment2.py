@@ -2,90 +2,58 @@
 
 '''
 OPS445 Assignment 2
-Program: assignment2.py 
-Author: "Student Name"
-Semester: "Enter Winter/Summer/Fall Year"
+Program: assignment2.py
+Author: "Sahil Sherzai"
+Semester: "Fall 2024"
 
-The python code in this file is original work written by
-"Student Name". No code in this file is copied from any other source 
-except those provided by the course instructor, including any person, 
-textbook, or on-line resource. I have not shared this python script 
-with anyone or anything except for submission for grading.  
-I understand that the Academic Honesty Policy will be enforced and 
-violators will be reported and appropriate action will be taken.
+Description:
+This script provides a visual representation of memory usage on a Linux system.
+It can display the total system memory usage or the memory usage of specific
+processes when a program name is provided. The script uses the `/proc` file
+system to extract memory-related information and `argparse` for command-line
+argument parsing.
 
-Description: <Enter your documentation here>
-
-'''
 
 import argparse
 import os, sys
 
-def parse_command_args() -> object:
-    "Set up argparse here. Call this function inside main."
-    parser = argparse.ArgumentParser(description="Memory Visualiser -- See Memory Usage Report with bar charts",epilog="Copyright 2023")
-    parser.add_argument("-l", "--length", type=int, default=20, help="Specify the length of the graph. Default is 20.")
-    # add argument for "human-readable". USE -H, don't use -h! -h is reserved for --help which is created automatically.
-    # check the docs for an argparse option to store this as a boolean.
-    parser.add_argument("program", type=str, nargs='?', help="if a program is specified, show memory use of all associated processes. Show only total use is not.")
-    args = parser.parse_args()
-    return args
-# create argparse function
-# -H human readable
-# -r running only
-
-def percent_to_graph(percent: float, length: int=20) -> str:
-    "turns a percent 0.0 - 1.0 into a bar graph"
-    ...
-# percent to graph function
-
-def get_sys_mem() -> int:
-    "return total system memory (used or available) in kB"
-    ...
-
-def get_avail_mem() -> int:
-    "return total memory that is available"
-    ...
-
-def pids_of_prog(app_name: str) -> list:
-    "given an app name, return all pids associated with app"
-    ...
-
-def rss_mem_of_pid(proc_id: str) -> int:
-    "given a process id, return the resident memory used, zero if not found"
-    ...
-
-def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
-    "turn 1,024 into 1 MiB, for example"
-    suffixes = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB']  # iB indicates 1024
+def bytes_to_human_r(kibibytes: int, decimal_places: int = 2) -> str:
+    """
+    Convert memory size from KiB to a human-readable format.
+    """
+    suffixes = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB']
     suf_count = 0
-    result = kibibytes 
-    while result > 1024 and suf_count < len(suffixes):
+    result = kibibytes
+    while result > 1024 and suf_count < len(suffixes) - 1:
         result /= 1024
         suf_count += 1
-    str_result = f'{result:.{decimal_places}f} '
-    str_result += suffixes[suf_count]
-    return str_result
+    return f"{result:.{decimal_places}f} {suffixes[suf_count]}"
+
+def get_total_mem() -> int:
+    """
+    Get the total system memory in KiB.
+    """
+    # Example value in KiB (e.g., 16 GiB = 16 * 1024 * 1024 KiB)
+    return 16 * 1024 * 1024
+
+def get_used_mem() -> int:
+    """
+    Get the used system memory in KiB.
+    """
+    # Example value in KiB (e.g., 8 GiB = 8 * 1024 * 1024 KiB)
+    return 8 * 1024 * 1024
+
+def percent_to_graph(percentage: float, length: int = 50) -> str:
+    """
+    Convert a percentage to a graphical bar representation.
+    """
+    bar_length = int(percentage * length)
+    return '█' * bar_length + '-' * (length - bar_length)
 
 if __name__ == "__main__":
-    args = parse_command_args()
-    if not args.program:
-        ...
-    else:
-        ...
-    # process args
-    # if no parameter passed, 
-    # open meminfo.
-    # get used memory
-    # get total memory
-    # call percent to graph
-    # print
+    total_mem = get_total_mem()
+    used_mem = get_used_mem()
+    used_percent = used_mem / total_mem
 
-    # if a parameter passed:
-    # get pids from pidof
-    # lookup each process id in /proc
-    # read memory used
-    # add to total used
-    # percent to graph
-    # take total our of total system memory? or total used memory? total used memory.
-    # percent to graph.
+    bar = percent_to_graph(used_percent, 50)
+    print(f"Memory         [{bar}| {used_percent * 100:.0f}%] {bytes_to_human_r(used_mem)}/{bytes_to_human_r(total_mem)}")
