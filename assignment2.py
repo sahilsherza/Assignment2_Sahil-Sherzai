@@ -6,6 +6,14 @@ Program: assignment2.py
 Author: "Sahil Sherzai"
 Semester: "Fall 2024"
 
+The python code in this file is original work written by
+"Sahil Sherzai". No code in this file is copied from any other source 
+except those provided by the course instructor, including any person, 
+textbook, or on-line resource. I have not shared this python script 
+with anyone or anything except for submission for grading.  
+I understand that the Academic Honesty Policy will be enforced and 
+violators will be reported and appropriate action will be taken.
+
 Description:
 This script provides a visual representation of memory usage on a Linux system.
 It can display the total system memory usage or the memory usage of specific
@@ -49,7 +57,7 @@ def percent_to_graph(percentage: float, length: int = 50) -> str:
     Convert a percentage to a graphical bar representation.
     """
     bar_length = int(percentage * length)
-    return '█' * bar_length + '-' * (length - bar_length)
+    return '' * bar_length + '-' * (length - bar_length)
 
 if __name__ == "__main__":
     total_mem = get_total_mem()
