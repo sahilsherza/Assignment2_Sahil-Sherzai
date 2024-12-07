@@ -17,6 +17,7 @@ argument parsing.
 import argparse
 import os, sys
 
+
 def bytes_to_human_r(kibibytes: int, decimal_places: int = 2) -> str:
     """
     Convert memory size from KiB to a human-readable format.
